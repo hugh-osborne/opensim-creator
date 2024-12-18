@@ -44,6 +44,13 @@ add_library(OpenSimCreator STATIC
     Documents/CustomComponents/PointToPointEdge.h
     Documents/CustomComponents/SphereLandmark.cpp
     Documents/CustomComponents/SphereLandmark.h
+	
+	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Lin02GolgiTendonOrgan.cpp
+	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Lin02GolgiTendonOrgan.h
+	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Mileusnic06Spindle.cpp
+	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Mileusnic06Spindle.h
+	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Thelen2003MuscleWithAfferents.cpp
+	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Thelen2003MuscleWithAfferents.h
 
     Documents/ExperimentalData/AnnotatedMotion.cpp
     Documents/ExperimentalData/AnnotatedMotion.h
