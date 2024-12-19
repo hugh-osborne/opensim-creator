@@ -218,8 +218,6 @@ protected:
 	double approxFiberAcceleration(const SimTK::State& s) const;
 	double approxFiberVelocity(const SimTK::State& s) const;
 
-	double getActivationDerivative(const SimTK::State& s) const;
-	
 
 private:
 

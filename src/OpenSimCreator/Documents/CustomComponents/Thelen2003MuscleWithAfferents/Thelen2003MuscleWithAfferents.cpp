@@ -339,7 +339,7 @@ void Thelen2003MuscleWithAfferents::computeStateVariableDerivatives(const SimTK:
     }
 --------------------------------------------------------------------*/
 // This is a "carefree" version of that:
-	derivs[0] = getActivationDerivative(s);
+	derivs[0] = getActivationRate(s);
 	derivs[1] = getFiberVelocity(s);
 
 	// next state is the LPF velocity
@@ -386,13 +386,6 @@ void Thelen2003MuscleWithAfferents::computeStateVariableDerivatives(const SimTK:
 	setStateVariableDerivativeValue(s, Lin02GolgiTendonOrgan::STATE_LPF_DERIV_NAME, gto_derivs[1]);
 	setStateVariableDerivativeValue(s, Lin02GolgiTendonOrgan::STATE_FILTER_INTER_NAME, gto_derivs[2]);
 	setStateVariableDerivativeValue(s, Lin02GolgiTendonOrgan::STATE_FILTER_OUTPUT_NAME, gto_derivs[3]);
-}
-
-double Thelen2003MuscleWithAfferents::
-getActivationDerivative(const SimTK::State& s) const
-{
-	return getActivationModel().calcDerivative(getActivation(s),
-		getExcitation(s));
 }
 
 //--------------------------------------------------------------------------

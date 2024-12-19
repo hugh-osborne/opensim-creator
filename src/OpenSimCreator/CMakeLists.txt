@@ -51,6 +51,8 @@ add_library(OpenSimCreator STATIC
 	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Mileusnic06Spindle.h
 	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Thelen2003MuscleWithAfferents.cpp
 	Documents/CustomComponents/Thelen2003MuscleWithAfferents/Thelen2003MuscleWithAfferents.h
+    Documents/CustomComponents/Thelen2003MuscleWithAfferents/MuscleWithSpindleController.cpp
+    Documents/CustomComponents/Thelen2003MuscleWithAfferents/MuscleWithSpindleController.h
 
     Documents/ExperimentalData/AnnotatedMotion.cpp
     Documents/ExperimentalData/AnnotatedMotion.h
