@@ -1,3 +1,5 @@
+#ifndef OPENSIM_THELEN2003MUSCLEWITHAFFERENTS_H_
+#define OPENSIM_THELEN2003MUSCLEWITHAFFERENTS_H_
 
 // INCLUDE
 #include <OpenSim/OpenSim.h>
@@ -236,3 +238,4 @@ public:
 
 } // end of namespace OpenSim
 
+#endif

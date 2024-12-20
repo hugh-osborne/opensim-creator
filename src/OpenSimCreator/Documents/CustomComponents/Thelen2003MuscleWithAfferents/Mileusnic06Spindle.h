@@ -1,3 +1,6 @@
+#ifndef OPENSIM_MILEUSNIC06SPINDLE_H_
+#define OPENSIM_MILEUSNIC06SPINDLE_H_
+
 /*
 * The Mileusnic06Spindle class implements the spindle afferent model from: 
 * Mileusnic et al. "Mathematical Models of Proprioceptors. I. Control and
@@ -248,3 +251,5 @@ private:
 	
 //=============================================================================
 } // end of namespace OpenSim
+
+#endif 

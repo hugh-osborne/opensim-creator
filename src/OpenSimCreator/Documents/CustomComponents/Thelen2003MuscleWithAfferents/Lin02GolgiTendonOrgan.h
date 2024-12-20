@@ -1,3 +1,5 @@
+#ifndef OPENSIM_LIN02GOLGITENDONORGAN_H_
+#define OPENSIM_LIN02GOLGITENDONORGAN_H_
 
 #include "OpenSim/Simulation/Model/ModelComponent.h"
 #include "OpenSim/Simulation/Model/Model.h"
@@ -90,3 +92,5 @@ private:
 }; // end of class Lin02GolgiTendonOrgan
 	
 } // end of namespace OpenSim
+
+#endif

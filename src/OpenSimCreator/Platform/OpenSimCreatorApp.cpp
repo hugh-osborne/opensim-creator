@@ -5,6 +5,7 @@
 #include <OpenSimCreator/Documents/CustomComponents/PointToPointEdge.h>
 #include <OpenSimCreator/Documents/CustomComponents/SphereLandmark.h>
 #include <OpenSimCreator/Documents/CustomComponents/Thelen2003MuscleWithAfferents/Thelen2003MuscleWithAfferents.h>
+#include <OpenSimCreator/Documents/CustomComponents/Thelen2003MuscleWithAfferents/MuscleWithSpindleController.h>
 #include <OpenSimCreator/UI/OpenSimCreatorTabRegistry.h>
 
 #include <OpenSim/Common/LogSink.h>
@@ -123,7 +124,8 @@ namespace
         OpenSim::Object::registerType(MidpointLandmark{});
         OpenSim::Object::registerType(PointToPointEdge{});
         OpenSim::Object::registerType(SphereLandmark{});
-        OpenSim::Object::registerType(OpenSim::Thelen2003MuscleWithAfferents());
+        OpenSim::Object::registerType(OpenSim::Thelen2003MuscleWithAfferents{});
+        OpenSim::Object::registerType(OpenSim::MuscleWithSpindleController{});
 
         // point OpenSim's log towards OSC's log
         //
