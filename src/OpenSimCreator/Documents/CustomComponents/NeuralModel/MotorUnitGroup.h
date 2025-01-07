@@ -1,5 +1,5 @@
-#ifndef OPENSIM_MOTORUNITGROUOP_H_
-#define OPENSIM_MOTORUNITGROUOP_H_
+#ifndef OPENSIM_MOTORUNITGROUP_H_
+#define OPENSIM_MOTORUNITGROUP_H_
 
 #include <OpenSim/Simulation/Model/ModelComponent.h>
 #include <OpenSim/Common/Set.h>
@@ -81,15 +81,15 @@ public:
         "Variance for spike threshold of the LIF neurons.");
 
     // Average Membrane Potential
-    OpenSim_DECLARE_OUTPUT(mean_membrane_potential, double, 
+    OpenSim_DECLARE_OUTPUT(mean_membrane_potential, double, getMeanMembranePotential,
         SimTK::Stage::Dynamics);
 
     // Average Firing Rate
-    OpenSim_DECLARE_OUTPUT(mean_firing_rate, double,
+    OpenSim_DECLARE_OUTPUT(mean_firing_rate, double, getMeanFiringRate,
         SimTK::Stage::Dynamics);
 
     // Muscle Excitation Value
-    OpenSim_DECLARE_OUTPUT(muscle_excitation, double,
+    OpenSim_DECLARE_OUTPUT(muscle_excitation, double, getMuscleExcitation, 
         SimTK::Stage::Dynamics);
 
 
@@ -113,6 +113,15 @@ public:
     void setEnabled(bool enableFlag);
 
     //==============================================================================
+    // GETTERS/SETTERS
+    //==============================================================================
+    double getMeanMembranePotential(const SimTK::State& s) const;
+
+    double getMeanFiringRate(const SimTK::State& s) const;
+
+    double getMuscleExcitation(const SimTK::State& s) const;
+
+    //==============================================================================
     // MODELCOMPONENT INTERFACE REQUIREMENTS
     //==============================================================================
     /** Sets up the ModelComponent from the model, if necessary */
@@ -126,9 +135,6 @@ public:
 
     /** Sets the default state for the ModelComponent */
     void extendSetPropertiesFromState(const SimTK::State& s) override;
-
-    /** Computes state variable derivatives */
-    void computeStateVariableDerivatives(const SimTK::State& s) const override;
 
 protected:
     static const std::string STATE_MEAN_MEMBRANE_POTENTIAL_NAME;
@@ -149,6 +155,7 @@ protected:
         double threshold_potential;         //voltage           mV        
         double refractory_period;           //time              s
         double membrane_potential;          //voltage           mV
+        double prev_time;                   //time              s
 
         LIF_Neuron() :
             tau(SimTK::NaN),
@@ -156,13 +163,8 @@ protected:
             threshold_potential(SimTK::NaN),
             refractory_period(SimTK::NaN),
             membrane_potential(SimTK::NaN),
+            prev_time(SimTK::NaN)
             {
-        }
-        friend std::ostream& operator<<(std::ostream& o,
-            const LIF_Neuron& mli) {
-            o << "MotorUnitGroup::LIF_Neuron should not be serialized!"
-                << std::endl;
-            return o;
         }
     };
 
@@ -171,10 +173,15 @@ protected:
     const std::vector<LIF_Neuron>& getNeurons(const SimTK::State& s) const;
     std::vector < LIF_Neuron>& updNeurons(const SimTK::State& s) const;
 
+    //==============================================================================
+    // SIMULATION
+    //==============================================================================
+    void updateNeurons(const SimTK::State& s, std::vector<MotorUnitGroup::LIF_Neuron>&) const;
+
 };  // class MotorUnitGroup
 
 } // namespace OpenSim
 
-#endif // OPENSIM_MOTORUNITGROUOP_H_
+#endif // OPENSIM_MOTORUNITGROUP_H_
 
 

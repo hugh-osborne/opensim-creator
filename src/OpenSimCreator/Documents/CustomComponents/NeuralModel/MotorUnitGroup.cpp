@@ -13,7 +13,7 @@ using namespace std;
 //=============================================================================
 // STATE VARIABLE NAMES
 //=============================================================================
-const std::string MotorUnitGroup::STATE_MEAN_MEMBRANE_POTENTIAL_NAME = "membrane_potentials";
+const std::string MotorUnitGroup::STATE_MEAN_MEMBRANE_POTENTIAL_NAME = "mean_membrane_potential";
 const std::string MotorUnitGroup::STATE_MEAN_FIRING_RATE_NAME = "mean_firing_rate";
 const std::string MotorUnitGroup::STATE_MUSCLE_EXCITATION_NAME= "muscle_excitation";
 
@@ -54,6 +54,34 @@ void MotorUnitGroup::setEnabled(bool aTrueFalse) {
     upd_enabled() = aTrueFalse;
 }
 
+double MotorUnitGroup::getMeanMembranePotential(const SimTK::State& s) const {
+    auto neurons = getNeurons(s);
+    double potential = 0.0;
+    for (auto& n : neurons)
+        potential += n.membrane_potential;
+    return potential / neurons.size();
+}
+
+double MotorUnitGroup::getMeanFiringRate(const SimTK::State& s) const {
+    return getMeanMembranePotential(s) * 0.0;
+}
+
+double MotorUnitGroup::getMuscleExcitation(const SimTK::State& s) const {
+    return getMeanMembranePotential(s) * 5.0;
+}
+
+void MotorUnitGroup::updateNeurons(const SimTK::State& s, std::vector<MotorUnitGroup::LIF_Neuron>&) const {
+    auto neurons = updCacheVariableValue(s, _neurons);
+    for (auto& n : neurons) {
+        double dt = s.getTime() - n.prev_time;
+        n.membrane_potential += dt * (n.membrane_potential - n.resting_potential);
+
+        if (n.membrane_potential > n.threshold_potential) {
+            n.membrane_potential = n.resting_potential;
+        }
+    }
+}
+
 const std::vector<MotorUnitGroup::LIF_Neuron>& MotorUnitGroup::getNeurons(const SimTK::State& s) const
 {
     if (isCacheVariableValid(s, _neurons)) {
@@ -83,54 +111,17 @@ void MotorUnitGroup::extendAddToSystem(SimTK::MultibodySystem& system) const
 {
     Super::extendAddToSystem(system);
 
+    addStateVariable("membrane_potentials");
+
     this->_neurons = addCacheVariable("neurons", std::vector<LIF_Neuron>(get_num_neurons()), SimTK::Stage::Dynamics);
 }
 
 void MotorUnitGroup::extendInitStateFromProperties(SimTK::State& s) const
 {
     Super::extendInitStateFromProperties(s);
-
-
-
-    if (!get_ignore_activation_dynamics()) {
-        setActivation(s, getDefaultActivation());
-    }
-    if (!get_ignore_tendon_compliance()) {
-        setFiberLength(s, getDefaultFiberLength());
-    }
 }
 
 void MotorUnitGroup::extendSetPropertiesFromState(const SimTK::State& s)
 {
     Super::extendSetPropertiesFromState(s);
-
-    if (!get_ignore_activation_dynamics()) {
-        setDefaultActivation(getStateVariableValue(s, STATE_ACTIVATION_NAME));
-    }
-    if (!get_ignore_tendon_compliance()) {
-        setDefaultFiberLength(getStateVariableValue(s, STATE_FIBER_LENGTH_NAME));
-    }
-}
-
-void MotorUnitGroup::computeStateVariableDerivatives(const SimTK::State& s) const
-{
-    // Activation dynamics if not ignored
-    if (!get_ignore_activation_dynamics()) {
-        double adot = 0;
-        // if not disabled or overridden then compute its derivative
-        if (appliesForce(s) && !isActuationOverridden(s)) {
-            adot = getActivationDerivative(s);
-        }
-        setStateVariableDerivativeValue(s, STATE_ACTIVATION_NAME, adot);
-    }
-
-    // Fiber length is the next state (if it is a state at all)
-    if (!get_ignore_tendon_compliance()) {
-        double ldot = 0;
-        // if not disabled or overridden then compute its derivative
-        if (appliesForce(s) && !isActuationOverridden(s)) {
-            ldot = getFiberVelocity(s);
-        }
-        setStateVariableDerivativeValue(s, STATE_FIBER_LENGTH_NAME, ldot);
-    }
 }
