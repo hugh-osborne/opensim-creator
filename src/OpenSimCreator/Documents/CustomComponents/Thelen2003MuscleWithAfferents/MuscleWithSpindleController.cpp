@@ -55,7 +55,7 @@ void MuscleWithSpindleController::computeControls(const SimTK::State& s, SimTK::
 	SimTK::Vector actControls(3, 0.0);
 
 	const auto& socket = getSocket<Actuator>("actuator");
-	actControls[0] = getSocket<Thelen2003MuscleWithAfferents>("AlphaInput").getConnectee().getIaOutput(s);
+	actControls[0] = getSocket<MotorUnitGroup>("AlphaInput").getConnectee().getMuscleExcitation(s);
 	actControls[1] = getSocket<Thelen2003MuscleWithAfferents>("SpindleInputStatic").getConnectee().getIaOutput(s);
 	actControls[2] = getSocket<Thelen2003MuscleWithAfferents>("SpindleInputDynamic").getConnectee().getIaOutput(s);
 	socket.getConnectee().addInControls(actControls, controls);

@@ -119,6 +119,16 @@ void MotorUnitGroup::extendAddToSystem(SimTK::MultibodySystem& system) const
 void MotorUnitGroup::extendInitStateFromProperties(SimTK::State& s) const
 {
     Super::extendInitStateFromProperties(s);
+
+    auto neurons = updNeurons(s);
+    for (auto& n : neurons) {
+        n.membrane_potential = -70.0;
+        n.prev_time = 0.0;
+        n.refractory_period = 0.02;
+        n.resting_potential = -70.0;
+        n.tau = 1.0;
+        n.threshold_potential = -50.0;
+    }
 }
 
 void MotorUnitGroup::extendSetPropertiesFromState(const SimTK::State& s)

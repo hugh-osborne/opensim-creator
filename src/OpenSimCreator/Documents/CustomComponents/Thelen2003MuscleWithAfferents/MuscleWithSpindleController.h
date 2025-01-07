@@ -2,6 +2,7 @@
 #define OPENSIM_MUSCLEWITHSPINDLECONTROLLER_H_
 
 #include "IndividualController.h"
+#include "../NeuralModel/MotorUnitGroup.h"
 #include "Thelen2003MuscleWithAfferents.h"
 //#include "osimPluginDLL.h" // for registering as plugin
 
@@ -37,7 +38,7 @@ namespace OpenSim {
 
 	public:
 		/** Inputs corresponding to alpha motoneruons */
-		OpenSim_DECLARE_SOCKET(AlphaInput, Thelen2003MuscleWithAfferents,
+		OpenSim_DECLARE_SOCKET(AlphaInput, MotorUnitGroup,
 			"Inputs to the alpha motoneurons.");
 
 		/** Inputs corresponding to static gamma motoneruons */
