@@ -136,6 +136,8 @@ public:
     /** Sets the default state for the ModelComponent */
     void extendSetPropertiesFromState(const SimTK::State& s) override;
 
+    void extendRealizeDynamics(const SimTK::State& state) const override;
+
 protected:
     static const std::string STATE_MEAN_MEMBRANE_POTENTIAL_NAME;
     static const std::string STATE_MEAN_FIRING_RATE_NAME;

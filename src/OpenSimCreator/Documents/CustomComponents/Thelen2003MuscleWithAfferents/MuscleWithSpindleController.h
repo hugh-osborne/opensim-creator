@@ -42,11 +42,11 @@ namespace OpenSim {
 			"Inputs to the alpha motoneurons.");
 
 		/** Inputs corresponding to static gamma motoneruons */
-		OpenSim_DECLARE_SOCKET(SpindleInputStatic, Thelen2003MuscleWithAfferents, 
+		OpenSim_DECLARE_SOCKET(SpindleInputStatic, MotorUnitGroup,
 			"Inputs to nuclear chain fibers and static nuclear bag fibers.");
 
 		/** Inputs corresponding to dynamic gamma motoneruons */
-		OpenSim_DECLARE_SOCKET(SpindleInputDynamic, Thelen2003MuscleWithAfferents, 
+		OpenSim_DECLARE_SOCKET(SpindleInputDynamic, MotorUnitGroup,
 			"Inputs to dynamic nuclear bag fibers.");
 
 		//=============================================================================

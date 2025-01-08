@@ -67,15 +67,16 @@ double MotorUnitGroup::getMeanFiringRate(const SimTK::State& s) const {
 }
 
 double MotorUnitGroup::getMuscleExcitation(const SimTK::State& s) const {
-    return getMeanMembranePotential(s) * 5.0;
+    return (getMeanMembranePotential(s) - get_rest_mean()) * 5.0;
 }
 
 void MotorUnitGroup::updateNeurons(const SimTK::State& s, std::vector<MotorUnitGroup::LIF_Neuron>&) const {
     auto neurons = updCacheVariableValue(s, _neurons);
     for (auto& n : neurons) {
         double dt = s.getTime() - n.prev_time;
+        n.prev_time = s.getTime();
         n.membrane_potential += dt * (n.membrane_potential - n.resting_potential);
-
+        n.membrane_potential += dt * 1.0;
         if (n.membrane_potential > n.threshold_potential) {
             n.membrane_potential = n.resting_potential;
         }
@@ -111,8 +112,6 @@ void MotorUnitGroup::extendAddToSystem(SimTK::MultibodySystem& system) const
 {
     Super::extendAddToSystem(system);
 
-    addStateVariable("membrane_potentials");
-
     this->_neurons = addCacheVariable("neurons", std::vector<LIF_Neuron>(get_num_neurons()), SimTK::Stage::Dynamics);
 }
 
@@ -129,9 +128,18 @@ void MotorUnitGroup::extendInitStateFromProperties(SimTK::State& s) const
         n.tau = 1.0;
         n.threshold_potential = -50.0;
     }
+    setCacheVariableValue(s, _neurons, neurons);
 }
 
 void MotorUnitGroup::extendSetPropertiesFromState(const SimTK::State& s)
 {
     Super::extendSetPropertiesFromState(s);
+}
+
+void MotorUnitGroup::extendRealizeDynamics(const SimTK::State& s) const {
+    Super::extendRealizeDynamics(s);
+
+    //std::vector<MotorUnitGroup::LIF_Neuron>& neurons = updCacheVariableValue(s, _neurons);
+    //updateNeurons(s, neurons);
+    //markCacheVariableValid(s, _neurons);
 }

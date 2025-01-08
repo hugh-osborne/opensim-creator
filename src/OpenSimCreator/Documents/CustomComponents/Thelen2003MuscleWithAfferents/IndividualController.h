@@ -1,7 +1,7 @@
 #ifndef OPENSIM_INDIVIDUALCONTROLLER_H_
 #define OPENSIM_INDIVIDUALCONTROLLER_H_
 
-#include <OpenSim/Simulation/Model/ModelComponent.h>
+#include <OpenSim/Simulation/Control/Controller.h>
 #include <OpenSim/Common/Set.h>
 
 namespace OpenSim { 
@@ -28,8 +28,8 @@ class Actuator;
  * @author Hugh Osborne
  *
  */
-class OSIMSIMULATION_API IndividualController : public ModelComponent {
-OpenSim_DECLARE_ABSTRACT_OBJECT(IndividualController, ModelComponent);
+class OSIMSIMULATION_API IndividualController : public Controller {
+OpenSim_DECLARE_ABSTRACT_OBJECT(IndividualController, Controller);
 
 public:
 //=============================================================================
@@ -76,16 +76,6 @@ public:
 
     /** Replace the current actuator with the one provided. */
     void setActuator(const Actuator& actuator);
-
-    /** Compute the control for actuator
-     *  This method defines the behavior for any concrete controller 
-     *  and therefore must be implemented by concrete subclasses.
-     *
-     * @param s         system state 
-     * @param controls  writable model controls (all actuators)
-     */
-    virtual void computeControls(const SimTK::State& s, 
-        SimTK::Vector &controls) const = 0;
 
     /** Get the number of controls this controller computes. */
     int getNumControls() const { return _numControls; }

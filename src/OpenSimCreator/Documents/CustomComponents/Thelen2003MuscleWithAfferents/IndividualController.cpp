@@ -15,7 +15,7 @@ using namespace std;
 // CONSTRUCTOR(S) AND DESTRUCTOR
 //=============================================================================
 IndividualController::IndividualController() :
-        ModelComponent{}, _numControls{0} {
+        Controller{}, _numControls{0} {
     constructProperties();
 }
 
@@ -31,7 +31,6 @@ IndividualController& IndividualController::operator=(IndividualController&&) = 
 
 void IndividualController::constructProperties() {
     setAuthors("Hugh Osborne based on work by Ajay Seth, Frank Anderson, Chand John, Samuel Hamner");
-    constructProperty_enabled(true);
 }
 
 //=============================================================================
