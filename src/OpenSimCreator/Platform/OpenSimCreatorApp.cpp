@@ -127,6 +127,7 @@ namespace
         OpenSim::Object::registerType(SphereLandmark{});
         OpenSim::Object::registerType(OpenSim::Thelen2003MuscleWithAfferents{});
         OpenSim::Object::registerType(OpenSim::MuscleWithSpindleController{});
+        OpenSim::Object::registerType(OpenSim::NeuralPopulation{});
         OpenSim::Object::registerType(OpenSim::MotorUnitGroup{});
 
         // point OpenSim's log towards OSC's log
