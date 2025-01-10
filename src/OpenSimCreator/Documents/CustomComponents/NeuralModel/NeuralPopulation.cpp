@@ -21,6 +21,9 @@ const std::string NeuralPopulation::STATE_MEAN_FIRING_RATE_NAME = "mean_firing_r
 //=============================================================================
 NeuralPopulation::NeuralPopulation() :
     ModelComponent{} {
+
+    _incoming_connections = std::vector<const SynapseConnection*>();
+
     constructProperties();
 }
 
@@ -63,19 +66,6 @@ double NeuralPopulation::getMeanMembranePotential(const SimTK::State& s) const {
 
 double NeuralPopulation::getMeanFiringRate(const SimTK::State& s) const {
     return getMeanMembranePotential(s) * 0.0;
-}
-
-void NeuralPopulation::updateNeurons(const SimTK::State& s, std::vector<NeuralPopulation::LIF_Neuron>&) const {
-    auto& neurons = updCacheVariableValue(s, _neurons);
-    for (auto& n : neurons) {
-        double dt = s.getTime() - n.prev_time;
-        n.prev_time = s.getTime();
-        n.membrane_potential += dt * (n.membrane_potential - n.resting_potential);
-        n.membrane_potential += dt * 1.0;
-        if (n.membrane_potential > n.threshold_potential) {
-            n.membrane_potential = n.resting_potential;
-        }
-    }
 }
 
 const std::vector<NeuralPopulation::LIF_Neuron>& NeuralPopulation::getNeurons(const SimTK::State& s) const
@@ -122,6 +112,8 @@ void NeuralPopulation::extendInitStateFromProperties(SimTK::State& s) const
         n.resting_potential = -70.0;
         n.tau = 1.0;
         n.threshold_potential = -50.0;
+        n.spiked = false;
+        n.refractory_time_left = 0.0;
     }
     markCacheVariableValid(s, _neurons);
 }
@@ -129,4 +121,47 @@ void NeuralPopulation::extendInitStateFromProperties(SimTK::State& s) const
 void NeuralPopulation::extendSetPropertiesFromState(const SimTK::State& s)
 {
     Super::extendSetPropertiesFromState(s);
+}
+
+//==============================================================================
+// FUNCTIONAL
+//==============================================================================
+
+void NeuralPopulation::updateNeurons(const SimTK::State& s, std::vector<NeuralPopulation::LIF_Neuron>&) const {
+    auto& neurons = updCacheVariableValue(s, _neurons);
+
+    // get any incoming spikes
+    for (auto ic : _incoming_connections) {
+        std::vector<double> psps = ic->getPsps(s);
+        // psps should be the same length as the number of neurons. 
+        for (int p = 0; p < get_num_neurons(); p++) {
+            if (neurons[p].refractory_time_left <= 0.0)
+                neurons[p].membrane_potential += psps[p];
+        }
+    }
+
+    for (auto& n : neurons) {
+        double dt = s.getTime() - n.prev_time;
+        n.prev_time = s.getTime();
+        n.spiked = false;
+
+        if (n.refractory_time_left > 0.0)
+            n.refractory_time_left -= dt;
+
+        n.membrane_potential += dt * -(n.membrane_potential - n.resting_potential);
+        if (n.membrane_potential > n.threshold_potential) {
+            n.spiked = true;
+            n.membrane_potential = n.resting_potential;
+            n.refractory_time_left = n.refractory_period;
+        }
+    }
+}
+
+int NeuralPopulation::registerIncomingConnection(const SynapseConnection* conn) const{
+    _incoming_connections.push_back(conn);
+    return (int)(_incoming_connections.size() - 1);
+}
+
+bool NeuralPopulation::getNeuronSpiked(const SimTK::State& s, int n) const {
+    return getNeurons(s)[n].spiked;
 }

@@ -3,6 +3,7 @@
 
 #include <OpenSim/Simulation/Model/ModelComponent.h>
 #include <OpenSim/Common/Set.h>
+#include "SynapseConnection.h"
 
 namespace OpenSim {
 
@@ -146,16 +147,20 @@ namespace OpenSim {
             double resting_potential;           //voltage           mV
             double threshold_potential;         //voltage           mV        
             double refractory_period;           //time              s
+            double refractory_time_left;        //time              s
             double membrane_potential;          //voltage           mV
             double prev_time;                   //time              s
+            bool   spiked;                      //boolean           
 
             LIF_Neuron() :
                 tau(SimTK::NaN),
                 resting_potential(SimTK::NaN),
                 threshold_potential(SimTK::NaN),
                 refractory_period(SimTK::NaN),
+                refractory_time_left(SimTK::NaN),
                 membrane_potential(SimTK::NaN),
-                prev_time(SimTK::NaN)
+                prev_time(SimTK::NaN),
+                spiked(false)
             {
             }
         };
@@ -169,6 +174,21 @@ namespace OpenSim {
         // SIMULATION
         //==============================================================================
         void updateNeurons(const SimTK::State& s, std::vector<LIF_Neuron>&) const;
+
+        // We want to be able to create a synapse connection object in Opensim creator 
+        // and indicate the input and output population for each. We don't want to list
+        // in the creator the incoming connections for each population. 
+        // So in the output population, we "register" each connection instead behind the 
+        // scenes.
+        mutable std::vector<const SynapseConnection*> _incoming_connections;
+
+        
+
+    public:
+
+        int registerIncomingConnection(const SynapseConnection* conn) const;
+
+        bool getNeuronSpiked(const SimTK::State& s, int n) const;
 
     };  // class NeuralPopulation
 

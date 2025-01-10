@@ -7,6 +7,8 @@
 #include <OpenSimCreator/Documents/CustomComponents/Thelen2003MuscleWithAfferents/Thelen2003MuscleWithAfferents.h>
 #include <OpenSimCreator/Documents/CustomComponents/Thelen2003MuscleWithAfferents/MuscleWithSpindleController.h>
 #include <OpenSimCreator/Documents/CustomComponents/NeuralModel/MotorUnitGroup.h>
+#include <OpenSimCreator/Documents/CustomComponents/NeuralModel/SynapseConnectionDelta.h>
+#include <OpenSimCreator/Documents/CustomComponents/NeuralModel/SynapsePoissonInput.h>
 #include <OpenSimCreator/UI/OpenSimCreatorTabRegistry.h>
 
 #include <OpenSim/Common/LogSink.h>
@@ -129,6 +131,8 @@ namespace
         OpenSim::Object::registerType(OpenSim::MuscleWithSpindleController{});
         OpenSim::Object::registerType(OpenSim::NeuralPopulation{});
         OpenSim::Object::registerType(OpenSim::MotorUnitGroup{});
+        OpenSim::Object::registerType(OpenSim::SynapsePoissonInput{});
+        OpenSim::Object::registerType(OpenSim::SynapseConnectionDelta{});
 
         // point OpenSim's log towards OSC's log
         //
