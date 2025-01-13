@@ -42,10 +42,6 @@ void SynapsePoissonInput::setEnabled(bool aTrueFalse) {
     upd_enabled() = aTrueFalse;
 }
 
-double SynapsePoissonInput::getAverageNumSpikes(const SimTK::State& s) const {
-    s.toString();
-    return _average_psp;
-}
 //==============================================================================
 // MODELCOMPONENT INTERFACE REQUIREMENTS
 //==============================================================================
@@ -60,7 +56,6 @@ void SynapsePoissonInput::extendInitStateFromProperties(SimTK::State& s) const
     Super::extendInitStateFromProperties(s);
 
     _num_output_neurons = getSocket<NeuralPopulation>("OutputPopulation").getConnectee().get_num_neurons();
-    getSocket<NeuralPopulation>("OutputPopulation").getConnectee().registerIncomingConnection(this);
 }
 
 //==============================================================================
@@ -76,15 +71,9 @@ std::vector<double> SynapsePoissonInput::getPsps(const SimTK::State& s) const {
     std::mt19937 gen(rd());
     std::poisson_distribution<> dis(get_lambda() * time_elapsed);
 
-    double total_psp = 0.0;
-
     for (int i = 0; i < _num_output_neurons; i++) {
-        double t_psp = dis(gen) * get_psp();
-        total_psp = t_psp;
-        out[i] += t_psp;
+        out[i] = dis(gen)* get_psp();
     }
-
-    _average_psp = (double)(total_psp / _num_output_neurons);
 
     return out;
 }

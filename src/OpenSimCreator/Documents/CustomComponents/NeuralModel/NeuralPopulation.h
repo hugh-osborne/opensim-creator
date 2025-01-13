@@ -88,6 +88,10 @@ namespace OpenSim {
         OpenSim_DECLARE_OUTPUT(mean_firing_rate, double, getMeanFiringRate,
             SimTK::Stage::Dynamics);
 
+        // Total Spikes
+        OpenSim_DECLARE_OUTPUT(total_spikes, double, getTotalSpikes,
+            SimTK::Stage::Dynamics);
+
 
         //=============================================================================
         // METHODS
@@ -114,6 +118,8 @@ namespace OpenSim {
         double getMeanMembranePotential(const SimTK::State& s) const;
 
         double getMeanFiringRate(const SimTK::State& s) const;
+
+        double getTotalSpikes(const SimTK::State& s) const;
 
         //==============================================================================
         // MODELCOMPONENT INTERFACE REQUIREMENTS
@@ -180,13 +186,13 @@ namespace OpenSim {
         // in the creator the incoming connections for each population. 
         // So in the output population, we "register" each connection instead behind the 
         // scenes.
-        mutable std::vector<const SynapseConnection*> _incoming_connections;
+        mutable std::map<const std::string, const SynapseConnection*> _incoming_connections;
 
         
 
     public:
 
-        int registerIncomingConnection(const SynapseConnection* conn) const;
+        void registerIncomingConnection(const SynapseConnection* conn) const;
 
         bool getNeuronSpiked(const SimTK::State& s, int n) const;
 

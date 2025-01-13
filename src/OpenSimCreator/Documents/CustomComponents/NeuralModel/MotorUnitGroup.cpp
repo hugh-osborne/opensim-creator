@@ -27,6 +27,8 @@ MotorUnitGroup::~MotorUnitGroup() = default;
 
 void MotorUnitGroup::constructProperties() {
     setAuthors("Hugh Osborne");
+
+    constructProperty_multiplier(1.0);
 }
 
 //=============================================================================
@@ -34,5 +36,5 @@ void MotorUnitGroup::constructProperties() {
 //=============================================================================
 
 double MotorUnitGroup::getMuscleExcitation(const SimTK::State& s) const {
-    return (getMeanMembranePotential(s) - get_rest_mean()) * 5.0;
+    return get_multiplier() * (getTotalSpikes(s) / get_num_neurons());
 }

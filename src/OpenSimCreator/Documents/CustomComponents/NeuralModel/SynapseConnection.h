@@ -39,6 +39,9 @@ namespace OpenSim {
         SynapseConnection();
         ~SynapseConnection() override;
 
+        /** Initializes the state of the ModelComponent */
+        void extendInitStateFromProperties(SimTK::State& s) const override;
+
         /** Get whether or not this controller is enabled.
          * @return true when controller is enabled.
 

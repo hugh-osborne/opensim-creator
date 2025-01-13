@@ -38,10 +38,6 @@ namespace OpenSim {
         OpenSim_DECLARE_PROPERTY(lambda, double,
             "The average spike firing rate of this input which is the lambda (rate) value of the Poisson distribution.");
 
-        // Average number of spikes being produced
-        OpenSim_DECLARE_OUTPUT(average_spikes, double, getAverageNumSpikes,
-            SimTK::Stage::Dynamics);
-
 
         //=============================================================================
         // METHODS
@@ -61,8 +57,6 @@ namespace OpenSim {
          * @param enableFlag Enable the controller if true.
          */
         void setEnabled(bool enableFlag);
-
-        double getAverageNumSpikes(const SimTK::State& s) const;
 
         /* Get the total PSP for each output neuron.
         */
@@ -87,7 +81,6 @@ namespace OpenSim {
 
     private:
         mutable int _num_output_neurons;
-        mutable double _average_psp;
         mutable double _prev_time;
 
     };  // class SynapsePoissonInput

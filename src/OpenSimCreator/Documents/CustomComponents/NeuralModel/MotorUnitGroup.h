@@ -32,6 +32,10 @@ public:
 // PROPERTIES
 //=============================================================================
 
+    // Spike Proportion Multiplier
+    OpenSim_DECLARE_PROPERTY(multiplier, double,
+        "Multiplier for the excitation.");
+
     // Muscle Excitation Value
     OpenSim_DECLARE_OUTPUT(muscle_excitation, double, getMuscleExcitation, 
         SimTK::Stage::Dynamics);

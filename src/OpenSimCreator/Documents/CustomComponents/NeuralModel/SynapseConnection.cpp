@@ -17,6 +17,14 @@ using namespace std;
 //=============================================================================
 SynapseConnection::SynapseConnection() :
     ModelComponent{} {
+
 }
 
 SynapseConnection::~SynapseConnection() = default;
+
+void SynapseConnection::extendInitStateFromProperties(SimTK::State& s) const
+{
+    Super::extendInitStateFromProperties(s);
+
+    getSocket<NeuralPopulation>("OutputPopulation").getConnectee().registerIncomingConnection(this);
+}

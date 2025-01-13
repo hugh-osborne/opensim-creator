@@ -22,7 +22,7 @@ const std::string NeuralPopulation::STATE_MEAN_FIRING_RATE_NAME = "mean_firing_r
 NeuralPopulation::NeuralPopulation() :
     ModelComponent{} {
 
-    _incoming_connections = std::vector<const SynapseConnection*>();
+    _incoming_connections = std::map<const std::string, const SynapseConnection*>();
 
     constructProperties();
 }
@@ -64,9 +64,20 @@ double NeuralPopulation::getMeanMembranePotential(const SimTK::State& s) const {
     return potential / neurons.size();
 }
 
-double NeuralPopulation::getMeanFiringRate(const SimTK::State& s) const {
-    return getMeanMembranePotential(s) * 0.0;
+double NeuralPopulation::getTotalSpikes(const SimTK::State& s) const {
+    double total_spikes = 0.0;
+    for (int i = 0; i < get_num_neurons(); i++) {
+        total_spikes += getNeuronSpiked(s, i) ? 1.0 : 0.0;
+    }
+    return total_spikes;
 }
+
+double NeuralPopulation::getMeanFiringRate(const SimTK::State& s) const {
+    double total_spikes = getTotalSpikes(s);
+    return total_spikes / (double)get_num_neurons();
+}
+
+
 
 const std::vector<NeuralPopulation::LIF_Neuron>& NeuralPopulation::getNeurons(const SimTK::State& s) const
 {
@@ -132,7 +143,8 @@ void NeuralPopulation::updateNeurons(const SimTK::State& s, std::vector<NeuralPo
 
     // get any incoming spikes
     for (auto ic : _incoming_connections) {
-        std::vector<double> psps = ic->getPsps(s);
+        std::vector<double> psps = ic.second->getPsps(s);
+        s.toString();
         // psps should be the same length as the number of neurons. 
         for (int p = 0; p < get_num_neurons(); p++) {
             if (neurons[p].refractory_time_left <= 0.0)
@@ -157,9 +169,8 @@ void NeuralPopulation::updateNeurons(const SimTK::State& s, std::vector<NeuralPo
     }
 }
 
-int NeuralPopulation::registerIncomingConnection(const SynapseConnection* conn) const{
-    _incoming_connections.push_back(conn);
-    return (int)(_incoming_connections.size() - 1);
+void NeuralPopulation::registerIncomingConnection(const SynapseConnection* conn) const{
+    _incoming_connections[conn->getName()] = conn;
 }
 
 bool NeuralPopulation::getNeuronSpiked(const SimTK::State& s, int n) const {

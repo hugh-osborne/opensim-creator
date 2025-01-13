@@ -55,8 +55,6 @@ void SynapseConnectionDelta::extendInitStateFromProperties(SimTK::State& s) cons
     _num_input_neurons = getSocket<NeuralPopulation>("InputPopulation").getConnectee().get_num_neurons();
     _num_output_neurons = getSocket<NeuralPopulation>("OutputPopulation").getConnectee().get_num_neurons();
 
-    getSocket<NeuralPopulation>("OutputPopulation").getConnectee().registerIncomingConnection(this);
-
     // Build the connections
     _connections = std::vector<std::vector<int>>(_num_input_neurons);
 
