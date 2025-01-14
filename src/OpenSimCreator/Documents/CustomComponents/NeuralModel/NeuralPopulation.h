@@ -179,7 +179,7 @@ namespace OpenSim {
         //==============================================================================
         // SIMULATION
         //==============================================================================
-        void updateNeurons(const SimTK::State& s, std::vector<LIF_Neuron>&) const;
+        virtual void updateNeurons(const SimTK::State& s) const;
 
         // We want to be able to create a synapse connection object in Opensim creator 
         // and indicate the input and output population for each. We don't want to list

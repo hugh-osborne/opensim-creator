@@ -59,6 +59,8 @@ add_library(OpenSimCreator STATIC
     Documents/CustomComponents/NeuralModel/NeuralPopulation.h
     Documents/CustomComponents/NeuralModel/MotorUnitGroup.cpp
     Documents/CustomComponents/NeuralModel/MotorUnitGroup.h
+    Documents/CustomComponents/NeuralModel/AfferentUnitGroup.cpp
+    Documents/CustomComponents/NeuralModel/AfferentUnitGroup.h
     Documents/CustomComponents/NeuralModel/SynapseConnection.cpp
     Documents/CustomComponents/NeuralModel/SynapseConnection.h
     Documents/CustomComponents/NeuralModel/SynapsePoissonInput.cpp

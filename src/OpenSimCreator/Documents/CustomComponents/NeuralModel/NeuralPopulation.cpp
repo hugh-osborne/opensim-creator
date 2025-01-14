@@ -86,7 +86,7 @@ const std::vector<NeuralPopulation::LIF_Neuron>& NeuralPopulation::getNeurons(co
     }
 
     std::vector<NeuralPopulation::LIF_Neuron>& neurons = updCacheVariableValue(s, _neurons);
-    updateNeurons(s, neurons);
+    updateNeurons(s);
     markCacheVariableValid(s, _neurons);
     return neurons;
 }
@@ -138,7 +138,7 @@ void NeuralPopulation::extendSetPropertiesFromState(const SimTK::State& s)
 // FUNCTIONAL
 //==============================================================================
 
-void NeuralPopulation::updateNeurons(const SimTK::State& s, std::vector<NeuralPopulation::LIF_Neuron>&) const {
+void NeuralPopulation::updateNeurons(const SimTK::State& s) const {
     auto& neurons = updCacheVariableValue(s, _neurons);
 
     // get any incoming spikes
